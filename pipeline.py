@@ -29,6 +29,11 @@ def prepare_data(
         [categorical_features_df, numerical_features_df, target_df], axis=1
     )
 
+    data_prepared = data_prepared.apply(
+        lambda x: x.fillna(x.mode()[0]) if x.dtype == "object" else x.fillna(x.mean()),
+        axis=0,
+    )
+
     X = data_prepared.drop(columns=[target])
     y = data_prepared[target]
     X_train, X_test, y_train, y_test = train_test_split(
